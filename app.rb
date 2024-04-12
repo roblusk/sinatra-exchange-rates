@@ -21,4 +21,11 @@ get("/:from_currency") do
 end
 
 get("/:from_currency/:to_currency") do
+  @from_currency = params.fetch("from_currency")
+  @to_currency = params.fetch("to_currency")
+  api_url = "https://api.exchangerate.host/convert?access_key=#{ENV["EXCHANGE_RATE_KEY"]}&from=#{@from_currency}&to=#{@to_currency}&amount=1"
+  raw_response = HTTP.get(api_url)
+  parsed_response = JSON.parse(raw_response)
+  @result = parsed_response.fetch("result").to_s
+  erb(:conversion)
 end
